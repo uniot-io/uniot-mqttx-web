@@ -25,23 +25,19 @@ export default {
     ja: 'リリース履歴',
   },
   mqttxDesc: {
-    zh: 'MQTT X 是一款由 EMQ 开源的 MQTT 5.0 跨平台桌面客户端，旨在帮助开发者更快的开发、调试 MQTT 服务和应用。',
-    en:
-      'MQTT X is a cross-platform MQTT 5.0 client tool open-sourced by EMQ, designed to help develop and debug MQTT services and applications faster.',
-    ja:
-      'MQTT Xは、EMQによるオープンソースのMQTT 5.0クロスプラットフォーム・デスクスクライアントで、開発者がMQTTサービスおよびアプリケーションをより速く開発およびデバッグできるよう設計されています。',
+    zh: 'MQTTX Web 是一款开源的可在浏览器运行的 MQTT 5.0 WebSocket 客户端工具，无需本地安装即可帮助您更快地调试 MQTT 服务及应用。',
+    en: 'MQTTX Web is an open-source MQTT 5.0 WebSocket client on the browser to help you debug your MQTT services and applications faster.',
+    ja: 'MQTTX Webは、オープンソースのMQTT 5.0 WebSocketクライアントで、ブラウザ上でMQTTサービスやアプリケーションのデバッグを高速化することができます。',
   },
   cloudTitle: {
-    zh: '需要一个专属的 MQTT 服务器？',
-    en: 'Need a dedicated MQTT server?',
-    ja: '専用のMQTTサーバーが必要ですか？',
+    zh: '立即获取一个您专属的 MQTT 服务！',
+    en: 'Get Your Dedicated MQTT Server Now!',
+    ja: '専用のMQTTサーバーを今すぐご利用いただけます！',
   },
   cloudSummary: {
-    zh: 'EMQX Cloud 是由 EMQ 提供的全托管 MQTT 云服务平台，可连接海量物联网设备并实时处理数据，且支持按量付费。',
-    en:
-      'EMQX Cloud is a fully managed MQTT cloud service platform provided by EMQ that connects massive amounts of IoT devices and processes data in real-time with pay-per-use support.',
-    ja:
-      'EMQX Cloudは、EMQが提供する、膨大な数のIoTデバイスを接続し、リアルタイムにデータ処理を行うフルマネージドMQTTクラウドサービスプラットフォームで、従量課金制に対応しているのが特徴です。',
+    zh: '发掘物联网的强大能量，尝试使用 EMQX Cloud - 一款全托管的 MQTT 云服务平台，支持连接海量设备，使用灵活按量计费的方式实时处理数据，将物联网连接和数据处理变得更高效便捷。',
+    en: 'Unlock the power of IoT with EMQX Cloud - the fully managed MQTT cloud service platform that connects massive amounts of devices and processes real-time data with flexible pay-per-use billing.',
+    ja: 'EMQX Cloudを使用してIoTの強力な機能を発見しましょう。EMQX Cloudは、大規模なデバイスを接続し、リアルタイムデータを柔軟な使用料金で処理することができる完全に管理されたMQTTクラウドサービスプラットフォームです。',
   },
   tryCloud: {
     zh: '免费试用 EMQX Cloud',

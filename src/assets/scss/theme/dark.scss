@@ -16,6 +16,14 @@ body.dark {
   --color-bg-code: #38404a;
   --color-bg-input_btn: transparent;
   --color-bg-radio: #37363d80;
+  --color-bg-select_lang: #37363d80;
+  --color-bg-popover: #fff;
+  --color-bg-dark: #131415d9;
+  --color-bg-unreadmsg: #1c1f22e8;
+  --color-bg-historybtn: #393a3c;
+  --color-bg-scrollbar: #ffffff33;
+  --color-bg-skeleton: #464646;
+  --color-bg-skeleton_transition: #252525;
   --color-bg-card-normal: #34363c;
   --color-bg-card-gradient: linear-gradient(33deg, #27393c 0%, #2c2f3e 100%);
   --color-bg-btn-gradient: linear-gradient(90deg, #35c98d 0%, #37dc85 100%);
@@ -28,13 +36,16 @@ body.dark {
   --color-text-right_block: #484848;
   --color-text-right_info: #959599;
   --color-text-left_info: #959599;
+  --color-text-active: #fff;
+  --color-text-leftbar_icon: #868787;
+  --color-text-historybtn: #fff;
+  --color-text-historybtn_disabled: #6f6f6f;
   --color-text-card_icon: #eaebec;
 
   /* Accent color */
   --color-main-green: #34c388;
   --color-minor-green: #53daa2;
   --color-light-green: #ebf8f2;
-  --color-main-red: #e86aa6;
   --color-minor-red: #f56c6c;
   --color-light-red: #fcdee4;
   --color-main-grey: #323232;
@@ -44,6 +55,13 @@ body.dark {
   /* Border color */
   --color-border-default: #383838;
   --color-border-bold: #969696;
+  --color-border-rightbar: #2f2f2f;
+  --color-border-left_metainfo: #676767;
+  --color-border-right_metainfo: #ffffff59;
+
+  /* Shadow color */
+  --color-shadow-leftlist: #00000061;
+  --color-shadow-sendbtn: #2dc17769;
   --color-shadow-card: #00000059;
   --color-shadow-message: #1f1f1f;
 }

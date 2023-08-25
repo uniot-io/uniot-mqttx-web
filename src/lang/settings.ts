@@ -49,4 +49,39 @@ export default {
     en: 'Advanced',
     ja: '詳細',
   },
+  autoResub: {
+    zh: '自动恢复订阅',
+    en: 'Auto resubscribe',
+    ja: '自動的に再購読',
+  },
+  autoResubDesc: {
+    zh: '重连时，对连接的订阅列表进行恢复订阅',
+    en: 'When reconnecting, the subscription list of the connection will be automatically resubscribed',
+    ja: '再接続時に、接続のサブスクリプションリストが自動的に再購読されます',
+  },
+  autoScroll: {
+    zh: '自动滚动',
+    en: 'Auto scroll',
+    ja: '自動スクロール',
+  },
+  autoScrollDesc: {
+    zh: '是否自动滚动消息列表',
+    en: 'Whether to automatically scroll the list of messages',
+    ja: 'メッセージリストを自動的にスクロールするかどうか',
+  },
+  autoScrollInterval: {
+    zh: '自动滚动频率（秒）',
+    en: 'Auto scroll interval (seconds)',
+    ja: '自動スクロール間隔（秒）',
+  },
+  multiTopics: {
+    zh: '多主题订阅',
+    en: 'Multi topics subscribe',
+    ja: '複数のトピックを購読',
+  },
+  multiTopicsDesc: {
+    zh: '开启后，将支持一次订阅多个主题，使用逗号（,）分隔',
+    en: 'Enable to subscribe to multiple topics at once, separated by commas',
+    ja: '複数のトピックを一度に購読することができます。コンマで区切ります。',
+  },
 }

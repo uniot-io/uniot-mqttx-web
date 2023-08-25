@@ -29,6 +29,21 @@ export default {
     en: 'Save',
     ja: '保存',
   },
+  reset: {
+    zh: '重置',
+    en: 'Reset',
+    ja: 'リセット',
+  },
+  disable: {
+    zh: '禁用',
+    en: 'Disable',
+    ja: '無効にする',
+  },
+  enable: {
+    zh: '启用',
+    en: 'Enable',
+    ja: '有効',
+  },
   noData: {
     zh: '暂无数据',
     en: 'No Data',
@@ -104,12 +119,29 @@ export default {
     en: 'Advanced Config',
     ja: '詳細設定',
   },
+  copy: {
+    zh: '复 制',
+    en: 'Copy',
+    ja: 'コピー',
+  },
+  copySuccess: {
+    zh: '复制成功',
+    en: 'Copy Success',
+    ja: 'コピーが成功しました',
+  },
+  copyFailed: {
+    zh: '复制失败',
+    en: 'Copy Failed',
+    ja: 'コピーが失敗しました',
+  },
+  version: {
+    zh: '版本：',
+    en: 'Version: ',
+    ja: 'システムバージョン：',
+  },
   cloud: {
-    zh:
-      '需要一个云原生的全托管 MQTT 服务？一键部署 <a href="https://www.emqx.com/zh/cloud/?utm_source=tools.emqx.io&utm_medium=referral&utm_campaign=mqttx-web-to-cloud" target="_blank" rel="noopener noreferrer">EMQX Cloud</a>！14 天免费试用！',
-    en:
-      'Need a Fully Managed, Cloud-Native MQTT Messaging Service? Try <a href="https://www.emqx.com/en/cloud/?utm_source=tools.emqx.io&utm_medium=referral&utm_campaign=mqttx-web-to-cloud" target="_blank" rel="noopener noreferrer">EMQX Cloud</a> now! 14-day trial, no credit card required.',
-    ja:
-      'フルマネージドのクラウドネイティブMQTTメッセージングサービスが必要ですか？今すぐ <a href="https://www.emqx.com/en/cloud/?utm_source=tools.emqx.io&utm_medium=referral&utm_campaign=mqttx-web-to-cloud" target="_blank" rel="noopener noreferrer">EMQX Cloud</a> をお試しください。30日間の試用版で、クレジットカードは必要ありません。',
+    zh: '需要一个云原生的全托管 MQTT 服务？一键部署 <a href="https://www.emqx.com/zh/cloud/?utm_source=emqx.io&utm_medium=referral&utm_campaign=mqttx-web-to-cloud" target="_blank" rel="noopener noreferrer">EMQX Cloud</a>！14 天免费试用！',
+    en: 'Need a Fully Managed, Cloud-Native MQTT Messaging Service? Try <a href="https://www.emqx.com/en/cloud/?utm_source=emqx.io&utm_medium=referral&utm_campaign=mqttx-web-to-cloud" target="_blank" rel="noopener noreferrer">EMQX Cloud</a> now! 14-day trial, no credit card required.',
+    ja: 'フルマネージドのクラウドネイティブMQTTメッセージングサービスが必要ですか？今すぐ <a href="https://www.emqx.com/en/cloud/?utm_source=emqx.io&utm_medium=referral&utm_campaign=mqttx-web-to-cloud" target="_blank" rel="noopener noreferrer">EMQX Cloud</a> をお試しください。30日間の試用版で、クレジットカードは必要ありません。',
   },
 }
