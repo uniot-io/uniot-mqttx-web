@@ -27,20 +27,19 @@ const convertHex = (value: string, codeType: 'encode' | 'decode'): string => {
   return convertMap[codeType](value)
 }
 
-const convertJSON = (value: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    try {
-      let $json = JSON.parse(value)
-      $json = JSON.stringify($json, null, 2)
-      return resolve($json)
-    } catch (error) {
-      return reject(error)
-    }
-  })
+const convertJSON = (value: string): [string, Error?] => {
+  try {
+    let $json = JSON.parse(value)
+    $json = JSON.stringify($json, null, 2)
+    return [$json, undefined]
+  } catch (error) {
+    return [value, error as Error]
+  }
 }
 
-const convertPayload = async (payload: string, currentType: PayloadType, fromType: PayloadType): Promise<string> => {
+const convertPayload = (payload: string, currentType: PayloadType, fromType: PayloadType): [string, Error?] => {
   let $payload = payload
+  let $error = undefined
   switch (fromType) {
     case 'Base64':
       $payload = convertBase64(payload, 'decode')
@@ -52,13 +51,13 @@ const convertPayload = async (payload: string, currentType: PayloadType, fromTyp
   if (currentType === 'Base64') {
     $payload = convertBase64($payload, 'encode')
   }
-  if (currentType === 'JSON') {
-    $payload = await convertJSON($payload)
+  if (currentType === 'JSON' || currentType === 'CBOR') {
+    [$payload, $error] = convertJSON($payload)
   }
   if (currentType === 'Hex') {
     $payload = convertHex($payload, 'encode')
   }
-  return $payload
+  return [$payload, $error]
 }
 
 export default convertPayload

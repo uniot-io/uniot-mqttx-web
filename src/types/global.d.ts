@@ -11,7 +11,7 @@ declare global {
 
   type Protocol = 'ws' | 'wss'
 
-  type PayloadType = 'Plaintext' | 'Base64' | 'JSON' | 'Hex'
+  type PayloadType = 'Plaintext' | 'Hex' | 'Base64' | 'JSON' | 'CBOR'
 
   type QoS = 0 | 1 | 2
 
@@ -187,8 +187,10 @@ declare global {
     qos: QoS
     retain: boolean
     topic: string
+    encoding: string
     color?: string
     properties?: PushPropertiesModel
+    originalPayload?: number[]
   }
 
   interface HistoryMessageHeaderModel {

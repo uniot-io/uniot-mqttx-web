@@ -3,8 +3,10 @@
     <span class="topic-color" :style="{ background: color }"></span>
     <div ref="leftPayload" class="left-payload payload" @contextmenu.prevent="customMenu($event)">
       <p class="left-info">
-        <span class="topic">Topic: {{ topic }}</span>
         <span class="qos">QoS: {{ qos }}</span>
+        <span class="encoding"><strike v-if="encodingType.length > 1">{{ encodingType[1] }}</strike> {{ encodingType[0] }}</span>
+        <br>
+        <span class="topic">Topic: {{ topic }}</span>
         <span v-if="retain" class="retain">Retain</span>
       </p>
       <div class="meta">
@@ -52,9 +54,14 @@ export default class MsgLeftItem extends Vue {
   @Prop({ required: true }) public qos!: number
   @Prop({ required: true }) public payload!: string
   @Prop({ required: true }) public createAt!: string
+  @Prop({ required: true }) public encoding!: string
   @Prop({ required: false, default: false }) public retain!: boolean
   @Prop({ required: false, default: () => ({}) }) public properties!: PushPropertiesModel
   @Prop({ required: false, default: '' }) public color!: string
+
+  get encodingType () {
+    return this.encoding.split(';')
+  }
 
   private customMenu(event: MouseEvent) {
     this.$emit('showmenu', this.payload, event)

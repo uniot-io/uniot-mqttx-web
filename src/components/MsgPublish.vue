@@ -273,6 +273,7 @@ export default class MsgPublish extends Vue {
     retain: false,
     topic: '',
     payload: JSON.stringify({ msg: 'hello' }, null, 2),
+    encoding: 'JSON'
   }
   private msgRecord: MessageModel = _.cloneDeep(this.defaultMsgRecord)
   private headerValue: HistoryMessageHeaderModel = {
@@ -283,7 +284,7 @@ export default class MsgPublish extends Vue {
 
   private payloadLang = 'json'
   private payloadType: PayloadType = 'JSON'
-  private payloadOptions: PayloadType[] = ['Plaintext', 'Base64', 'JSON', 'Hex']
+  private payloadOptions: PayloadType[] = ['Plaintext', 'Base64', 'JSON', 'CBOR', 'Hex']
 
   @Watch('editorHeight')
   private handleHeightChanged() {
@@ -298,7 +299,7 @@ export default class MsgPublish extends Vue {
   @Watch('payloadType')
   private handleTypeChange(val: PayloadType, oldVal: PayloadType) {
     const { payload } = this.msgRecord
-    if (val === 'JSON') {
+    if (val === 'JSON' || val === 'CBOR') {
       this.payloadLang = 'json'
     } else {
       this.payloadLang = 'plaintext'
@@ -306,15 +307,11 @@ export default class MsgPublish extends Vue {
     if (payload === '') {
       return
     }
-    convertPayload(payload, val, oldVal)
-      .then((res) => {
-        this.msgRecord.payload = res
-      })
-      .catch((error: Error) => {
-        const errorMsg = error.toString()
-        this.$message.error(errorMsg)
-        this.payloadType = oldVal
-      })
+    const [res, error] = convertPayload(payload, val, oldVal)
+    this.msgRecord.payload = res
+    if (error) {
+      this.$message.error(error.toString())
+    }
   }
   @Watch('historyIndex', { immediate: true, deep: true })
   private handleHistoryIndexChange(val: number, lastval: number) {

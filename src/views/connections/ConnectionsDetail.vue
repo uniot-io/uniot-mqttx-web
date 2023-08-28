@@ -142,7 +142,7 @@
               </a>
             </el-tooltip>
             <el-select class="received-type-select" size="small" v-model="receivedMsgType">
-              <el-option v-for="type in ['Plaintext', 'Base64', 'JSON', 'Hex']" :key="type" :value="type"> </el-option>
+              <el-option v-for="type in ['Plaintext', 'Hex', 'Base64', 'JSON', 'CBOR']" :key="type" :value="type"> </el-option>
             </el-select>
             <MsgTypeTabs v-model="msgType" @change="handleMsgTypeChanged" />
           </div>
@@ -171,6 +171,9 @@
           <a href="javascript:;" class="context-menu__item" @click="handleCopyMessage">
             <i class="iconfont icon-copy"></i>{{ $t('common.copy') }}
           </a>
+          <a v-if="selectedMessage && !selectedMessage.out" href="javascript:;" class="context-menu__item" @click="handleViewAsMessage">
+            <i class="iconfont icon-edit"></i>{{ `View as ${receivedMsgType}` }}
+          </a>
           <a href="javascript:;" class="context-menu__item danger" @click="handleDeleteMessage">
             <i class="iconfont icon-delete"></i>{{ $t('common.delete') }}
           </a>
@@ -194,6 +197,7 @@
 </template>
 
 <script lang="ts">
+import CBOR from 'cbor'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import { TranslateResult } from 'vue-i18n'
@@ -217,7 +221,7 @@ import MsgTypeTabs from '@/components/MsgTypeTabs.vue'
 import ConnectionInfo from './ConnectionInfo.vue'
 import Contextmenu from '@/components/Contextmenu.vue'
 
-import connectionMessageService from '@/utils/api/connectionMessageService.ts'
+import connectionMessageService from '@/utils/api/connectionMessageService'
 import { hasMessagePayloadID, hasMessageHeaderID } from '@/utils/historyRecordUtils'
 import historyMessageHeaderService from '@/utils/api/historyMessageHeaderService'
 import historyMessagePayloadService from '@/utils/api/historyMessagePayloadService'
@@ -369,7 +373,7 @@ export default class ConnectionsDetail extends Vue {
     const filterBar: HTMLElement = this.$refs.filterBar as HTMLElement
     const filterBarOffsetHeight = filterBar.offsetHeight
 
-    this.messageListMarginTop = filterBarOffsetHeight > 56 ? filterBarOffsetHeight - 37 : 19
+    this.messageListMarginTop = filterBarOffsetHeight > 56 ? filterBarOffsetHeight - 36 : 18
 
     this.messageListHeight =
       document.body.offsetHeight - connectionTopbar.offsetHeight - connectionFooter.offsetHeight - filterBarOffsetHeight
@@ -403,6 +407,25 @@ export default class ConnectionsDetail extends Vue {
           this.$message.error(this.$tc('common.copyFailed'))
         },
       )
+    }
+  }
+
+  private async handleViewAsMessage() {
+    let id = ''
+    if (this.selectedMessage && this.selectedMessage.id) {
+      id = this.selectedMessage.id.toString()
+    }
+    const updatedMsg: MessageModel | undefined = await connectionMessageService.updatePayloadType(
+      this.$route.params.id,
+      id,
+      this.receivedMsgType,
+      this.convertReceivePayloadByType,
+    )
+    this.showContextmenu = false
+    if (updatedMsg) {
+      this.$emit('reload')
+    } else {
+      this.$message.error(`Parsing to ${this.receivedMsgType} failed`)
     }
   }
 
@@ -753,15 +776,17 @@ export default class ConnectionsDetail extends Vue {
   }
 
   private onMessageArrived(id: string) {
-    return (topic: string, payload: Buffer, packet: IPublishPacket) => {
+    return (topic: string, originalPayload: Buffer, packet: IPublishPacket) => {
       const { qos, retain, properties } = packet
-      const convertPayload = this.convertPayloadByType(payload, this.receivedMsgType, 'receive') as string
+      const convertion = this.convertReceivePayloadByType(originalPayload, this.receivedMsgType)
       const receivedMessage: MessageModel = {
         id: getMessageId(),
         out: false,
         createAt: time.getNowDate(),
         topic,
-        payload: convertPayload,
+        payload: convertion.payload,
+        encoding: convertion.type,
+        originalPayload: [...originalPayload],
         qos,
         retain,
         properties,
@@ -840,10 +865,10 @@ export default class ConnectionsDetail extends Vue {
       }
     }
 
-    const $payload = this.convertPayloadByType(payload, type, 'publish')
+    const convertion = this.convertPublishPayloadByType(payload, type)
     this.client.publish!(
       topic,
-      $payload,
+      convertion.payload,
       { qos, retain, properties: props as IClientPublishOptions['properties'] },
       (error: Error) => {
         if (error) {
@@ -860,6 +885,7 @@ export default class ConnectionsDetail extends Vue {
           payload,
           qos,
           retain,
+          encoding: convertion.type,
           properties,
         }
         const isActiveTopicMessages = matchTopicMethod(this.activeTopic, topic)
@@ -883,7 +909,7 @@ export default class ConnectionsDetail extends Vue {
 
   // Scroll to page bottom
   private scrollToBottomThrottle = () => {
-    this.scrollSubject.next()
+    setTimeout(this.scrollToBottom, 500);
   }
 
   private scrollToBottom() {
@@ -914,40 +940,55 @@ export default class ConnectionsDetail extends Vue {
     }, 500)
   }
 
-  private convertPayloadByType(value: Buffer | string, type: PayloadType, way: 'publish' | 'receive'): Buffer | string {
-    const validJSONType = (jsonValue: string, warnMessage: TranslateResult) => {
+  private convertReceivePayloadByType(value: Buffer, type: PayloadType): { payload: string, type: string } {
+    if (type === 'Base64' || type === 'Hex') {
+      const $type = type.toLowerCase() as PayloadConvertType
+      return { payload: value.toString($type), type }
+    }
+    if (type === 'CBOR') {
       try {
-        JSON.parse(jsonValue)
+        return { payload: JSON.stringify(CBOR.decode(value), null, 2), type: "CBOR as JSON" }
       } catch (error) {
-        this.$message.warning(`${warnMessage} ${error.toString()}`)
+        // console.warn(error)
       }
     }
-    const genPublishPayload = (publishType: PayloadType, publishValue: string) => {
-      if (publishType === 'Base64' || publishType === 'Hex') {
-        const $type = publishType.toLowerCase() as PayloadConvertType
-        return Buffer.from(publishValue, $type)
+    if (type === 'JSON') {
+      try {
+        return { payload: JSON.stringify(JSON.parse(value.toString()), null, 2), type }
+      } catch (error) {
+        // console.warn(error)
       }
-      if (publishType === 'JSON') {
-        validJSONType(publishValue, this.$t('connections.publishMsg'))
-      }
-      return publishValue
     }
-    const genReceivePayload = (receiveType: PayloadType, receiveValue: Buffer) => {
-      if (receiveType === 'Base64' || receiveType === 'Hex') {
-        const $type = receiveType.toLowerCase() as 'base64' | 'hex'
-        return receiveValue.toString($type)
-      }
-      if (receiveType === 'JSON') {
-        validJSONType(receiveValue.toString(), this.$t('connections.receivedMsg'))
-      }
-      return receiveValue.toString()
+    if (type === 'Plaintext') {
+      return { payload: value.toString(), type }
     }
-    if (way === 'publish' && typeof value === 'string') {
-      return genPublishPayload(type, value)
-    } else if (way === 'receive' && typeof value !== 'string') {
-      return genReceivePayload(type, value)
+    return { payload: value.toString(), type: `Plaintext;${type}` }
+  }
+
+  private convertPublishPayloadByType(value: string, type: PayloadType): { payload: string | Buffer, type: string } {
+    if (type === 'Base64' || type === 'Hex') {
+        const $type = type.toLowerCase() as PayloadConvertType
+        return { payload: Buffer.from(value, $type), type: type }
+      }
+    if (type === 'CBOR') {
+      try {
+        return { payload: CBOR.encode(JSON.parse(value)), type: "JSON as CBOR" }
+      } catch (error) {
+        // console.warn(error)
+      }
     }
-    return value
+    if (type === 'JSON') {
+      try {
+        JSON.parse(value)
+        return { payload: value, type }
+      } catch (error) {
+        // console.warn(error)
+      }
+    }
+    if (type === 'Plaintext') {
+      return { payload: value, type }
+    }
+    return { payload: value, type: `Plaintext;${type}` }
   }
 
   // Re-subscribe topic

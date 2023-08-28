@@ -2,8 +2,10 @@
   <div class="msg-right-item">
     <div class="right-payload payload" @contextmenu.prevent="customMenu($event)">
       <p class="right-info">
-        <span class="topic">Topic: {{ topic }}</span>
         <span class="qos">QoS: {{ qos }}</span>
+        <span class="encoding"><strike v-if="encodingType.length > 1">{{ encodingType[1] }}</strike> {{ encodingType[0] }}</span>
+        <br>
+        <span class="topic">Topic: {{ topic }}</span>
       </p>
       <div class="meta">
         <p v-if="properties.subscriptionIdentifier" class="properties right">
@@ -50,7 +52,12 @@ export default class MsgrightItem extends Vue {
   @Prop({ required: true }) public qos!: number
   @Prop({ required: true }) public payload!: string
   @Prop({ required: true }) public createAt!: string
+  @Prop({ required: true }) public encoding!: string
   @Prop({ required: false, default: () => ({}) }) public properties!: PushPropertiesModel
+
+  get encodingType () {
+    return this.encoding.split(';')
+  }
 
   private customMenu(event: MouseEvent) {
     this.$emit('showmenu', this.payload, event)
