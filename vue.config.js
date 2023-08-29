@@ -1,8 +1,8 @@
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 process.env.VUE_APP_VERSION = require('./package.json').version
-process.env.VUE_APP_PAGE_TITLE = 'MQTTX'
-process.env.VUE_APP_PAGE_DESCRIPTION = 'MQTTX'
+process.env.VUE_APP_PAGE_TITLE = 'Uniot MQTTX'
+process.env.VUE_APP_PAGE_DESCRIPTION = 'Uniot MQTTX Web Client'
 
 const buildMode = process.env.BUILD_MODE
 

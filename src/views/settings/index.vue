@@ -42,8 +42,6 @@
         <el-col :span="4">
           <el-switch
             :value="autoResub"
-            active-color="#13ce66"
-            inactive-color="#A2A9B0"
             @change="handleAutoResubSwitchChange"
           >
           </el-switch>
@@ -69,8 +67,6 @@
         <el-col :span="4">
           <el-switch
             :value="autoScroll"
-            active-color="#13ce66"
-            inactive-color="#A2A9B0"
             @change="handleAutoScrollSwitchChange"
           >
           </el-switch>
@@ -110,8 +106,6 @@
         <el-col :span="4">
           <el-switch
             :value="multiTopics"
-            active-color="#13ce66"
-            inactive-color="#A2A9B0"
             @change="handleMultiTopicsSwitchChange"
           >
           </el-switch>
@@ -184,14 +178,10 @@ export default class Settings extends Vue {
   @Getter('multiTopics') private multiTopics!: boolean
 
   private langOptions: Options[] = [
-    { label: '简体中文', value: 'zh' },
     { label: 'English', value: 'en' },
-    { label: '日本語', value: 'ja' },
   ]
   private themeOptions: Options[] = [
     { label: 'Light', value: 'light' },
-    { label: 'Dark', value: 'dark' },
-    { label: 'Night', value: 'night' },
   ]
 
   private handleSelectChange(type: 'lang' | 'theme', value: string | number | boolean): void {

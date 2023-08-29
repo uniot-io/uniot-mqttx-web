@@ -152,7 +152,7 @@ export default class ConnectionsList extends Vue {
       top: 0;
       width: 0;
       height: 0;
-      border-top: 36px solid var(--color-main-green);
+      border-top: 36px solid var(--color-junior-green);
       border-left: 36px solid transparent;
       span {
         position: absolute;
@@ -171,7 +171,7 @@ export default class ConnectionsList extends Vue {
       min-width: 18px;
       height: 18px;
       line-height: 18px;
-      background: var(--color-main-green);
+      background: var(--color-junior-green);
       border-radius: 9px;
       padding: 0 6px;
       color: #fff;
@@ -187,7 +187,7 @@ export default class ConnectionsList extends Vue {
       vertical-align: top;
       margin-top: 10px;
       &.online {
-        background: var(--color-main-green);
+        background: var(--color-junior-green);
       }
     }
     &:hover {

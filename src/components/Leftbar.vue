@@ -3,7 +3,7 @@
     <section class="leftbar-top">
       <div class="app-logo leftbar-item">
         <a :href="siteLink" target="_blank" rel="noopener noreferrer">
-          <img src="../assets/images/app-logo.png" alt="app-logo" />
+          <img src="../assets/images/app-logo.svg" alt="app-logo" />
         </a>
       </div>
       <div :class="[{ active: isConnection }, 'leftbar-item']">
@@ -24,11 +24,6 @@
           <i class="iconfont icon-settings"></i>
         </a>
       </div>
-      <div :class="[{ active: isHelp }, 'leftbar-item']">
-        <a href="javascript:;" @click="routeToPage('/help')">
-          <i class="iconfont icon-mqtt"></i>
-        </a>
-      </div>
       <div :class="[{ active: isAbout }, 'leftbar-item']">
         <a href="javascript:;" @click="routeToPage('/about')">
           <i class="iconfont icon-about"></i>
@@ -47,7 +42,7 @@ export default class Leftbar extends Vue {
   @Getter('currentLang') private getterLang!: Language
 
   get siteLink(): string {
-    return this.getterLang === 'zh' ? 'https://mqttx.app/zh' : 'https://mqttx.app/'
+    return 'https://uniot.io/'
   }
   get isConnection(): boolean {
     return ['Connections', 'ConnectionDetails'].includes(this.$route.name || '') && this.$route.query.oper !== 'create'

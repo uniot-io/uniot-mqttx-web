@@ -181,7 +181,15 @@ export default class MessageList extends Vue {
   }
   &.still {
     &::-webkit-scrollbar {
-      display: none;
+      width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background: var(--color-bg-scrollbar-inactive);
+      width: 8px;
     }
   }
 
