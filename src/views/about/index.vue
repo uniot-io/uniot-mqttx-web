@@ -8,63 +8,48 @@
       <div class="about-content">
         <div class="about-content__header">
           <p class="version">{{ $t('common.version') }} v{{ version }}</p>
-          <p class="help">
-            <a class="web-link" :href="releasesLink" target="_blank" rel="noopener noreferrer">
-              {{ $t('about.releases') }}
-            </a>
-            <a class="web-link" href="https://github.com/emqx/MQTTX/issues" target="_blank" rel="noopener noreferrer">
-              {{ $t('about.support') }}
-            </a>
-          </p>
           <div class="description">
-            <p>{{ $t('about.mqttxDesc') }}</p>
+            Based on the original MQTTX v1.9.5 by <a href="https://www.emqx.io" target="_blank" rel="noopener noreferrer">EMQ</a>,
+            this fork introduces several enhancements and changes to improve
+            usability and functionality for specific Uniot requirements. We acknowledge and appreciate the efforts of
+            the original developers at EMQ for creating a versatile MQTT web client.
           </div>
-          <div class="btns">
-            <el-button class="link-btn" type="primary" @click="goToLink('https://github.com/emqx/MQTTX')">
-              <i class="iconfont icon-github"></i>
-              GitHub →
-            </el-button>
-            <el-button class="link-btn" type="primary" @click="goToLink(mqttxWebsite)">
-              <i class="iconfont icon-website"></i>
-              {{ $t('about.web') }} →
-            </el-button>
-            <el-button class="link-btn" type="primary" @click="goToLink(`${mqttxWebsite}/docs/faq`)">
-              <i class="iconfont icon-faq"></i>
-              FAQ →
-            </el-button>
-          </div>
-          <div class="emqx-cloud">
+          <h2>Releases</h2>
+          <ul>
+            <li>
+              <strong>v0.6.2</strong>:
+              <ul>
+                <li>CBOR Integration and Refinements.</li>
+                <li>Added CBOR format support to the last will message.</li>
+                <li>Message encodings are now visibly displayed.</li>
+                <li>The message list now supports decoding of messages.</li>
+                <li>Introduced the option for force disconnection (termination).</li>
+                <li>Resolved issues related to AutoResubscribe.</li>
+              </ul>
+            </li>
+          </ul>
+          <!-- <div class="emqx-cloud">
             <h2>{{ $t('about.cloudTitle') }}</h2>
             <p>{{ $t('about.cloudSummary') }}</p>
             <el-button class="try-cloud-btn" type="primary" @click="goToLink(emqxCloudWebsite)">
               {{ $t('about.tryCloud') }} →
             </el-button>
-          </div>
+          </div> -->
         </div>
         <div class="about-content__footer">
           <div class="emq-logo">
-            <img :src="emqLogoSrc" alt="emqx" width="40" />
+            <img src="@/assets/images/uniot-logo.svg" alt="uniot" width="55" />
             <span class="copyright">
-              &copy;{{ fullYear }} <a :href="emqWebsite" target="_blank" rel="noopener noreferrer">EMQ</a> Technologies
-              Inc.
+              &copy;{{ fullYear }} <a href="https://uniot.io" target="_blank" rel="noopener noreferrer">Uniot Labs</a>
             </span>
           </div>
           <div class="follow-items">
-            <a target="_blank" rel="noopener noreferrer" class="follow-link" href="https://twitter.com/EMQTech">
-              <i class="iconfont icon-ttww"></i>
+            <a target="_blank" rel="noopener noreferrer" class="follow-link" href="https://github.com/emqx/MQTTX">
+              <i class="iconfont icon-github"></i>
             </a>
-            <a target="_blank" rel="noopener noreferrer" class="follow-link" href="https://discord.gg/xYGf3fQnES">
-              <i class="iconfont icon-discord"></i>
+            <a target="_blank" rel="noopener noreferrer" class="follow-link" href="https://mqttx.app">
+              <i class="iconfont icon-website"></i>
             </a>
-            <a target="_blank" rel="noopener noreferrer" class="follow-link" href="https://slack-invite.emqx.io/">
-              <i class="iconfont icon-slack"></i>
-            </a>
-            <el-popover v-if="getterLang === 'zh'" placement="top-start" width="30" trigger="click">
-              <img class="emqx-wechat" src="@/assets/images/wx_qr_code.png" alt="qq" />
-              <span class="follow-link" slot="reference">
-                <i class="iconfont icon-we-chat"></i>
-              </span>
-            </el-popover>
           </div>
         </div>
       </div>
