@@ -7,7 +7,13 @@
       <el-button class="primary-btn" icon="el-icon-plus" @click="clickMethod(false)">
         {{ btnTitle }}
       </el-button>
-      <p v-html="$t('common.cloud')"></p>
+      <p>
+        Add a new MQTT connection to get started. Click the '+' to connect to a broker.
+      <br>
+        Once connected, you will be able to publish and subscribe to topics.
+      <br>
+        Enjoy messaging!
+      </p>
     </div>
   </div>
 </template>
@@ -41,9 +47,12 @@ export default class EmptyPage extends Vue {
       margin-bottom: 20px;
     }
     .primary-btn {
-      background: linear-gradient(134deg, #37dc85 0%, #35ca8d 100%);
+      background: var(--color-main-green);
       color: #fff;
-      border: 1px solid #37dc85;
+      border: 1px solid var(--color-main-green);
+      &:hover {
+        background: var(--color-minor-green);
+      }
     }
     p {
       margin: 32px auto;

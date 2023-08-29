@@ -20,7 +20,7 @@ Vue.use(VueVirtualScroller)
 Vue.use(VueRx)
 Vue.use(VueGtm, {
   id: 'GTM-PF2FS9GZ',
-  enabled: process.env.NODE_ENV === 'production' && process.env.BASE_URL === '/online-mqtt-client/',
+  enabled: process.env.NODE_ENV === 'production',
   debug: false,
 } as VueGtmUseOptions)
 
