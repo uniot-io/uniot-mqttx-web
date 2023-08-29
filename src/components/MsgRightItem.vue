@@ -6,6 +6,7 @@
         <span class="encoding"><strike v-if="encodingType.length > 1">{{ encodingType[1] }}</strike> {{ encodingType[0] }}</span>
         <br>
         <span class="topic">Topic: {{ topic }}</span>
+        <span v-if="retain" class="retain">Retain</span>
       </p>
       <div class="meta">
         <p v-if="properties.subscriptionIdentifier" class="properties right">
@@ -53,6 +54,7 @@ export default class MsgrightItem extends Vue {
   @Prop({ required: true }) public payload!: string
   @Prop({ required: true }) public createAt!: string
   @Prop({ required: true }) public encoding!: string
+  @Prop({ required: false, default: false }) public retain!: boolean
   @Prop({ required: false, default: () => ({}) }) public properties!: PushPropertiesModel
 
   get encodingType () {
@@ -82,6 +84,10 @@ export default class MsgrightItem extends Vue {
     position: relative;
     left: 0px;
     animation: rightMsg 0.3s ease-in-out;
+  }
+  .retain {
+    color: var(--color-text-active);
+    background-color: var(--color-minor-green);
   }
 }
 </style>

@@ -91,8 +91,9 @@ const getClientOptions = (record: ConnectionModel): IClientOptions => {
   }
   // Will Message
   if (will) {
-    const { lastWillTopic: topic, lastWillPayload: payload, lastWillQos: qos, lastWillRetain: retain } = will
+    const { lastWillTopic: topic, lastWillPayload: originalPayload, lastWillQos: qos, lastWillRetain: retain } = will
     if (topic) {
+      const payload = Buffer.from(originalPayload)
       options.will = { topic, payload, qos: qos as QoS, retain }
       if (protocolVersion === 5) {
         const { properties } = will
@@ -172,6 +173,7 @@ export const getDefaultRecord = (): ConnectionModel => {
     will: {
       lastWillTopic: '',
       lastWillPayload: '',
+      lastWillType: 'plaintext',
       lastWillQos: 0,
       lastWillRetain: false,
       properties: {

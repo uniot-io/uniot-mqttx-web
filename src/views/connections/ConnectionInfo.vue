@@ -68,18 +68,30 @@
           >
             {{ $t('connections.connectBtn') }}
           </el-button>
-          <el-button
-            v-else
-            class="btn disconnect"
-            icon="el-icon-switch-button"
-            plain
-            type="outline"
-            size="mini"
-            :loading="btnLoading"
-            @click="disconnect"
-          >
-            {{ $t('connections.disconnectedBtn') }}
-          </el-button>
+          <template v-else>
+            <el-button
+              class="btn disconnect"
+              icon="el-icon-switch-button"
+              plain
+              type="outline"
+              size="mini"
+              :loading="btnLoading"
+              @click="disconnect"
+            >
+              {{ $t('connections.disconnectedBtn') }}
+            </el-button>
+            <el-button
+              class="btn disconnect cancel"
+              icon="el-icon-close"
+              plain
+              type="outline"
+              size="mini"
+              :loading="btnLoading"
+              @click="terminate"
+            >
+              Terminate
+            </el-button>
+          </template>
           <el-button
             v-if="!client.connected && btnLoading"
             class="disconnect cancel btn"
@@ -165,6 +177,15 @@ export default class ConnectionInfo extends Vue {
         return false
       }
       this.$emit('handleDisconnect', this.connection)
+    })
+  }
+
+  private terminate() {
+    this.vueForm.validate(async (valid: boolean) => {
+      if (!valid) {
+        return false
+      }
+      this.$emit('handleTerminate', this.connection)
     })
   }
 

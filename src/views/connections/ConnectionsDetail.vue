@@ -22,11 +22,25 @@
                 placement="bottom"
                 :effect="theme !== 'light' ? 'light' : 'dark'"
                 :open-delay="1000"
+                content="Terminate"
+              >
+                <a class="disconnect-btn" href="javascript:;" @click="disconnect(true)">
+                  <i v-if="!disconnectLoding" class="el-icon-close"></i>
+                  <i v-else class="el-icon-loading"></i>
+                </a>
+              </el-tooltip>
+            </transition>
+            <transition name="el-fade-in">
+              <el-tooltip
+                v-if="!showClientInfo && client.connected"
+                placement="bottom"
+                :effect="theme !== 'light' ? 'light' : 'dark'"
+                :open-delay="1000"
                 :content="$t('connections.disconnectedBtn')"
               >
-                <a class="disconnect-btn" href="javascript:;" @click="disconnect">
+                <a class="disconnect-btn" href="javascript:;" @click="disconnect(false)">
                   <i v-if="!disconnectLoding" class="el-icon-switch-button"></i>
-                  <i v-else class="iconfont icon-disconnect"></i>
+                  <i v-else class="el-icon-loading"></i>
                 </a>
               </el-tooltip>
               <el-tooltip
@@ -70,6 +84,9 @@
                 <el-dropdown-item command="disconnect" :disabled="!client.connected">
                   <i class="el-icon-switch-button"></i>{{ $t('connections.disconnect') }}
                 </el-dropdown-item>
+                <el-dropdown-item command="terminate" :disabled="!client.connected">
+                  <i class="el-icon-close"></i>Terminate
+                </el-dropdown-item>
                 <el-dropdown-item class="delete-item" command="deleteConnect" divided>
                   <i class="iconfont icon-delete"></i>{{ $t('connections.deleteConnect') }}
                 </el-dropdown-item>
@@ -86,7 +103,8 @@
             :client="client"
             :btn-loading="connectLoading"
             @handleConnect="connect"
-            @handleDisconnect="disconnect"
+            @handleDisconnect="disconnect(false)"
+            @handleTerminate="disconnect(true)"
             @handleCancel="cancel"
           />
         </el-collapse-transition>
@@ -227,7 +245,7 @@ import historyMessageHeaderService from '@/utils/api/historyMessageHeaderService
 import historyMessagePayloadService from '@/utils/api/historyMessagePayloadService'
 
 type MessageType = 'all' | 'received' | 'publish'
-type CommandType = 'searchByTopic' | 'clearHistory' | 'disconnect' | 'deleteConnect'
+type CommandType = 'searchByTopic' | 'clearHistory' | 'disconnect' | 'terminate' | 'deleteConnect'
 type PayloadConvertType = 'base64' | 'hex'
 
 interface Top {
@@ -541,7 +559,10 @@ export default class ConnectionsDetail extends Vue {
   private handleCommand(command: CommandType) {
     switch (command) {
       case 'disconnect':
-        this.disconnect()
+        this.disconnect(false)
+        break
+      case 'terminate':
+        this.disconnect(true)
         break
       case 'deleteConnect':
         this.removeConnection()
@@ -668,12 +689,12 @@ export default class ConnectionsDetail extends Vue {
     this.client.end!(true)
     this.retryTimes = 0
   }
-  private disconnect(): boolean | void {
+  private disconnect(force = false): boolean | void {
     if (!this.client.connected || this.disconnectLoding) {
       return false
     }
     this.disconnectLoding = true
-    this.client.end!(false, () => {
+    this.client.end!(force, () => {
       this.disconnectLoding = false
       this.retryTimes = 0
 
@@ -909,7 +930,7 @@ export default class ConnectionsDetail extends Vue {
 
   // Scroll to page bottom
   private scrollToBottomThrottle = () => {
-    setTimeout(this.scrollToBottom, 500);
+    this.scrollSubject.next()
   }
 
   private scrollToBottom() {

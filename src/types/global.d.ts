@@ -262,7 +262,8 @@ declare global {
   interface WillModel {
     id?: string
     lastWillTopic: string
-    lastWillPayload: string
+    lastWillPayload: string | Buffer
+    lastWillType: string
     lastWillQos: QoS
     lastWillRetain: boolean
     properties?: WillPropertiesModel

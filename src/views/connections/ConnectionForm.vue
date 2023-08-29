@@ -132,7 +132,7 @@
             <el-col :span="2"></el-col>
             <el-col :span="22">
               <el-form-item label-width="93px" label="SSL/TLS" prop="ssl">
-                <el-switch v-model="record.ssl" active-color="#13ce66" inactive-color="#A2A9B0" @change="handleSSL">
+                <el-switch v-model="record.ssl" @change="handleSSL">
                 </el-switch>
               </el-form-item>
             </el-col>
@@ -146,7 +146,7 @@
                   label-width="93px"
                   prop="rejectUnauthorized"
                 >
-                  <el-switch v-model="record.rejectUnauthorized" active-color="#13ce66" inactive-color="#A2A9B0">
+                  <el-switch v-model="record.rejectUnauthorized">
                   </el-switch>
                   <el-tooltip
                     class="tooltip-secure"
@@ -383,20 +383,21 @@
                   class="will-payload-box"
                   :label-width="`${willLabelWidth}px`"
                   :label="$t('connections.willPayload')"
-                  prop="will.lastWillPayload"
+                  prop="lastWillPayload"
                 >
                   <div class="last-will-payload">
                     <Editor
                       ref="lastWillPayload"
                       id="lastWillPayload"
-                      :lang="payloadType"
+                      :lang="payloadType === 'cbor' ? 'json' : payloadType"
                       :fontSize="12"
-                      v-model="record.will.lastWillPayload"
+                      v-model="lastWillPayload"
                       scrollbar-status="auto"
                     />
                   </div>
                   <div class="lang-type">
                     <el-radio-group v-model="payloadType">
+                      <el-radio label="cbor">JSON as CBOR</el-radio>
                       <el-radio label="json">JSON</el-radio>
                       <el-radio label="plaintext">Plaintext</el-radio>
                     </el-radio-group>
@@ -499,6 +500,7 @@
 </template>
 
 <script lang="ts">
+import CBOR from 'cbor'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class'
 import _ from 'lodash'
@@ -530,6 +532,7 @@ export default class ConnectionCreate extends Vue {
   @Action('TOGGLE_WILL_MESSAGE_VISIBLE')
   private toggleWillMessageVisible!: (payload: { willMessageVisible: boolean }) => void
 
+  private lastWillPayload = ''
   private willMessageVisible = true
   private advancedVisible = true
   private payloadType = 'plaintext'
@@ -540,6 +543,39 @@ export default class ConnectionCreate extends Vue {
   private defaultRecord: ConnectionModel = getDefaultRecord()
 
   private record: ConnectionModel = _.cloneDeep(this.defaultRecord)
+
+  @Watch('lastWillPayload')
+  private handleLastWillConvertion(val: string) {
+    let payload: string | Buffer = val
+    if (this.payloadType === 'cbor') {
+      try {
+        payload = CBOR.encode(JSON.parse(val))
+      } catch (error) {
+        // console.warn(error)
+      }
+    }
+    this.record.will!.lastWillPayload = payload
+    this.record.will!.lastWillType = this.payloadType
+  }
+
+  @Watch('payloadType')
+  private handleTypeChange() {
+    this.handleLastWillConvertion(this.lastWillPayload)
+  }
+
+  @Watch('record')
+  private handleRecordChange(val: string) {
+    let lastWillPayload = this.record.will!.lastWillPayload
+    if (typeof this.record.will!.lastWillPayload !== 'string') {
+      try {
+        lastWillPayload = JSON.stringify(CBOR.decode(Buffer.from(this.record.will!.lastWillPayload)), null, 2)
+      } catch (error) {
+        // console.warn(error)
+      }
+    }
+    this.lastWillPayload = lastWillPayload.toString()
+    this.payloadType = this.record.will!.lastWillType
+  }
 
   @Watch('oper')
   private handleCreateNewConnection(val: string) {
