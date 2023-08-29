@@ -7,8 +7,8 @@ process.env.VUE_APP_PAGE_DESCRIPTION = 'Uniot MQTTX Web Client'
 const buildMode = process.env.BUILD_MODE
 
 module.exports = {
-  publicPath: buildMode === 'docker' ? '/' : '/online-mqtt-client/',
-  outputDir: buildMode === 'docker' ? 'dist' : 'dist/online-mqtt-client',
+  publicPath: '/',
+  outputDir: 'dist',
   configureWebpack: {
     plugins: [
       new MonacoWebpackPlugin({
