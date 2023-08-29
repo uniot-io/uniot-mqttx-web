@@ -377,6 +377,13 @@ export default class SubscriptionsList extends Vue {
       }
     }
   }
+  public async disableUnsubscribedTopics() {
+    this.getCurrentConnection(this.connectionId)
+    for (let sub of this.subsList) {
+      sub.disabled = true
+    }
+    updateConnection(this.connectionId, this.record)
+  }
 
   private saveTopicToSubList(topic: string, qos: QoS, index?: number, aliasArr?: string[]): void {
     const existTopicIndex: number = this.subsList.findIndex((item: SubscriptionModel) => item.topic === topic)
@@ -707,7 +714,7 @@ export default class SubscriptionsList extends Vue {
       transition: all 0.3s ease;
       animation: subItem 0.2s ease-in-out;
       &.active {
-        background: var(--color-bg-dark) !important;
+        background: var(--color-bg-leftbar_item) !important;
         box-shadow: none;
         .topic,
         .qos {

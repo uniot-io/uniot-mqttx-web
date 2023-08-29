@@ -244,6 +244,8 @@ import { hasMessagePayloadID, hasMessageHeaderID } from '@/utils/historyRecordUt
 import historyMessageHeaderService from '@/utils/api/historyMessageHeaderService'
 import historyMessagePayloadService from '@/utils/api/historyMessagePayloadService'
 
+import Store from '@/store'
+
 type MessageType = 'all' | 'received' | 'publish'
 type CommandType = 'searchByTopic' | 'clearHistory' | 'disconnect' | 'terminate' | 'deleteConnect'
 type PayloadConvertType = 'base64' | 'hex'
@@ -698,6 +700,11 @@ export default class ConnectionsDetail extends Vue {
       this.disconnectLoding = false
       this.retryTimes = 0
 
+      const resubscribe = Store.getters.autoResub
+      if (!resubscribe) {
+        this.subListRef.disableUnsubscribedTopics()
+      }
+
       this.changeActiveConnection({
         id: this.curConnectionId,
         client: this.client,
@@ -1020,6 +1027,8 @@ export default class ConnectionsDetail extends Vue {
       const needResub = resubscribe && subscriptions.length
       if (needResub) {
         this.subListRef.resubscribe()
+      } else {
+        this.subListRef.disableUnsubscribedTopics()
       }
     }
   }
