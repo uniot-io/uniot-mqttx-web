@@ -160,7 +160,7 @@
               </a>
             </el-tooltip>
             <el-select class="received-type-select" size="small" v-model="receivedMsgType">
-              <el-option v-for="type in ['Plaintext', 'Hex', 'Base64', 'JSON', 'CBOR']" :key="type" :value="type"> </el-option>
+              <el-option v-for="type in ['Plaintext', 'Hex', 'Base64', 'JSON', 'CBOR', 'COSE']" :key="type" :value="type"> </el-option>
             </el-select>
             <MsgTypeTabs v-model="msgType" @change="handleMsgTypeChanged" />
           </div>
@@ -230,6 +230,7 @@ import matchSearch from '@/utils/matchSearch'
 import topicMatch, { matchTopicMethod } from '@/utils/topicMatch'
 import { createClient } from '@/utils/mqttUtils'
 import { getMessageId } from '@/utils/idGenerator'
+import COSE from '@/utils/cose'
 
 import MessageList from '@/components/MessageList.vue'
 import MsgPublish from '@/components/MsgPublish.vue'
@@ -980,6 +981,13 @@ export default class ConnectionsDetail extends Vue {
         // console.warn(error)
       }
     }
+    if (type === 'COSE') {
+      try {
+        return { payload: JSON.stringify(CBOR.decode(COSE.read(value)), null, 2), type: "COSE as JSON" }
+      } catch (error) {
+        // console.warn(error)
+      }
+    }
     if (type === 'JSON') {
       try {
         return { payload: JSON.stringify(JSON.parse(value.toString()), null, 2), type }
@@ -1001,6 +1009,13 @@ export default class ConnectionsDetail extends Vue {
     if (type === 'CBOR') {
       try {
         return { payload: CBOR.encode(JSON.parse(value)), type: "JSON as CBOR" }
+      } catch (error) {
+        // console.warn(error)
+      }
+    }
+    if (type === 'COSE') {
+      try {
+        return { payload: COSE.build(CBOR.encode(JSON.parse(value))), type: "COSE as JSON" }
       } catch (error) {
         // console.warn(error)
       }

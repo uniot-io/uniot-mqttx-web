@@ -10,6 +10,20 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          include: /node_modules\/@noble\/curves/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [['@babel/preset-env', { modules: 'commonjs' }]]
+            }
+          }
+        }
+      ],
+    },
     plugins: [
       new MonacoWebpackPlugin({
         output: 'static/',

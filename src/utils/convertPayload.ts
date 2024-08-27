@@ -51,7 +51,7 @@ const convertPayload = (payload: string, currentType: PayloadType, fromType: Pay
   if (currentType === 'Base64') {
     $payload = convertBase64($payload, 'encode')
   }
-  if (currentType === 'JSON' || currentType === 'CBOR') {
+  if (['COSE', 'CBOR', 'JSON'].includes(currentType)) {
     [$payload, $error] = convertJSON($payload)
   }
   if (currentType === 'Hex') {

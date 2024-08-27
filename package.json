@@ -8,13 +8,15 @@
     "build:docker": "export BUILD_MODE=docker && vue-cli-service build",
     "start": "vue-cli-service build && http-server dist -o /online-mqtt-client",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "postinstall": "cd node_modules/cose-js && npm install"
   },
   "dependencies": {
     "@gtm-support/vue2-gtm": "^1.3.0",
     "axios": "^0.21.2",
     "cbor": "^9.0.1",
     "core-js": "~2.6.11",
+    "cose-js": "github:vldmkr/cose-js",
     "element-ui": "^2.13.0",
     "fs-extra": "^8.1.0",
     "lodash-id": "^0.14.0",
@@ -36,9 +38,11 @@
     "vuex-class": "^0.3.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.25.4",
     "@fullhuman/postcss-purgecss": "^2.1.0",
     "@fullhuman/vue-cli-plugin-purgecss": "~2.2.0",
     "@types/chai": "^4.1.0",
+    "@types/cose-js": "^0.8.3",
     "@types/fs-extra": "^8.0.0",
     "@types/lodash": "^4.14.142",
     "@types/lowdb": "^1.0.9",

@@ -11,7 +11,7 @@ declare global {
 
   type Protocol = 'ws' | 'wss'
 
-  type PayloadType = 'Plaintext' | 'Hex' | 'Base64' | 'JSON' | 'CBOR'
+  type PayloadType = 'Plaintext' | 'Hex' | 'Base64' | 'JSON' | 'CBOR' | 'COSE'
 
   type QoS = 0 | 1 | 2
 

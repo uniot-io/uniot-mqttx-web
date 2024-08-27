@@ -389,7 +389,7 @@
                     <Editor
                       ref="lastWillPayload"
                       id="lastWillPayload"
-                      :lang="payloadType === 'cbor' ? 'json' : payloadType"
+                      :lang="(payloadType === 'cbor' || payloadType === 'cose') ? 'json' : payloadType"
                       :fontSize="12"
                       v-model="lastWillPayload"
                       scrollbar-status="auto"
@@ -397,6 +397,7 @@
                   </div>
                   <div class="lang-type">
                     <el-radio-group v-model="payloadType">
+                      <el-radio label="cose">COSE</el-radio>
                       <el-radio label="cbor">JSON as CBOR</el-radio>
                       <el-radio label="json">JSON</el-radio>
                       <el-radio label="plaintext">Plaintext</el-radio>
@@ -509,6 +510,7 @@ import { loadConnection, createConnection, updateConnection, loadSuggestConnecti
 import { emptyToNull } from '@/utils/handleString'
 import { getClientId } from '@/utils/idGenerator'
 import { getMQTTProtocol, getDefaultRecord } from '@/utils/mqttUtils'
+import COSE from '@/utils/cose'
 import Editor from '@/components/Editor.vue'
 import KeyValueEditor from '@/components/KeyValueEditor.vue'
 
@@ -554,6 +556,13 @@ export default class ConnectionCreate extends Vue {
         // console.warn(error)
       }
     }
+    if (this.payloadType === 'cose') {
+      try {
+        payload = COSE.build(CBOR.encode(JSON.parse(val)))
+      } catch (error) {
+        // console.warn(error)
+      }
+    }
     this.record.will!.lastWillPayload = payload
     this.record.will!.lastWillType = this.payloadType
   }
@@ -568,7 +577,11 @@ export default class ConnectionCreate extends Vue {
     let lastWillPayload = this.record.will!.lastWillPayload
     if (typeof this.record.will!.lastWillPayload !== 'string') {
       try {
-        lastWillPayload = JSON.stringify(CBOR.decode(Buffer.from(this.record.will!.lastWillPayload)), null, 2)
+        const bufferPayload = Buffer.from(this.record.will!.lastWillPayload)
+        const cborInput = this.record.will!.lastWillType === 'cose'
+          ? COSE.read(bufferPayload)
+          : bufferPayload
+        lastWillPayload = JSON.stringify(CBOR.decode(cborInput), null, 2)
       } catch (error) {
         // console.warn(error)
       }
